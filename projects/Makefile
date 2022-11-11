@@ -13,12 +13,10 @@ IMGTOL   = $(TOOLPATH)imgtol.com
 COPY     = cp
 DEL      = rm -f
 
-# Ĭ��
 
 default :
 	$(MAKE) img
 
-# ����ָ�����
 
 ipl10.bin : ipl10.nas Makefile
 	$(NASK) ipl10.nas ipl10.bin ipl10.lst
@@ -45,6 +43,7 @@ bootpack.bim : bootpack.obj naskfunc.obj Makefile
 bootpack.hrb : bootpack.bim Makefile
 	$(BIM2HRB) bootpack.bim bootpack.hrb 0
 
+# 不知为何，不能用copy命令，就只好用cat命令代替了
 haribote.sys : asmhead.bin bootpack.hrb Makefile
 	cat asmhead.bin bootpack.hrb > haribote.sys<<b
 
@@ -54,7 +53,6 @@ haribote.img : ipl10.bin haribote.sys Makefile
 		copy from:haribote.sys to:@: \
 		imgout:haribote.img
 
-# ����
 
 img :
 	$(MAKE) haribote.img
@@ -67,7 +65,7 @@ run :
 install :
 	$(MAKE) img
 	$(IMGTOL) w a: haribote.img
-.PHONY: clean
+# 不知为何，分开删会导致批量删除相关命令不执行？？？
 clean :
 	-$(DEL) *.bin *.lst *.gas *.obj bootpack.nas bootpack.map\
 		bootpack.bim bootpack.hrb haribote.sys<<b
